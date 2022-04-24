@@ -3,13 +3,21 @@ project(Chat)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(heders)
+include_directories(headers)
 include_directories(sources)
 
+add_compile_options(-pthread -lIce)
+
 add_executable(Chat
-        temp/Chat.h
-        heders/Room.h
-        heders/Server.h
-        temp/Chat.cpp
+        headers/Room.h
+        headers/Server.h
+        headers/User.h
+        headers/RoomFactory.h
+        headers/Chat.h
         sources/Room.cpp
-        sources/Server.cpp sources/User.cpp heders/User.h sources/RoomFactory.cpp heders/RoomFactory.h ServerMain.cpp Client.cpp)
+        sources/Server.cpp
+        sources/User.cpp
+        sources/RoomFactory.cpp
+        sources/Chat.cpp
+        ChatClient/Client.cpp
+        )

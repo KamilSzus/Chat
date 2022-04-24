@@ -2,7 +2,7 @@
 #define CHAT_SERVER_H
 
 #include <Ice/Ice.h>
-#include <Chat.h>
+#include "../headers/Chat.h"
 #include <cstdio>
 #include <vector>
 

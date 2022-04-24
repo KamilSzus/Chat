@@ -4,7 +4,7 @@
 #define CHAT_ROOM_H
 
 #include <Ice/Ice.h>
-#include <Chat.h>
+#include "../headers/Chat.h"
 
 class Room : public Chat::Room {
 
@@ -20,6 +20,8 @@ public:
     virtual void removeUser(const Chat::UserPrx& who, const ::Ice::Current& current) override;
     virtual std::string getName(const Ice::Current&) override;
     bool isUserOnList(const std::string &name, const Ice::Current &current);
+
+    Room();
 };
 
 

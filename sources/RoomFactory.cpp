@@ -2,7 +2,8 @@
 // Created by kamil on 23.04.2022.
 //
 
-#include "RoomFactory.h"
+#include <Ice/Config.h>
+#include "../headers/RoomFactory.h"
 
 ::Ice::Int RoomFactory::getCPULoad(const Ice::Current &current) {
     return 0;

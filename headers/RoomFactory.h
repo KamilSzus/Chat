@@ -6,7 +6,7 @@
 #define CHAT_ROOMFACTORY_H
 
 #include <Ice/Ice.h>
-#include <Chat.h>
+#include "../headers/Chat.h"
 
 class RoomFactory : Chat::RoomFactory{
 

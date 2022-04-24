@@ -1,7 +1,7 @@
 
 #include <Ice/Ice.h>
-#include <Room.h>
-#include <User.h>
+#include "../headers/Room.h"
+#include "../headers/User.h"
 
 int main(int argc, char* argv[])
 {
@@ -9,11 +9,12 @@ int main(int argc, char* argv[])
     Ice::CommunicatorPtr ic;
     try {
         ic = Ice::initialize(argc, argv);
-        Ice::ObjectPrx base = ic->stringToProxy("SimplePrinter:default -p 10000");
+        Ice::ObjectPrx base = ic->stringToProxy("Room:default -p 10000");
         Chat::RoomPrx room = Chat::RoomPrx::checkedCast(base);
-        if (!room)
+        if (!room) {
             throw "Invalid proxy";
-        room->getName();
+        }
+        std::string test = room->getName();
     } catch (const Ice::Exception& ex) {
         std::cerr << ex << std::endl;
         status = 1;

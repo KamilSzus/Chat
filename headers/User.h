@@ -3,7 +3,7 @@
 #define CHAT_USER_H
 
 #include <Ice/Ice.h>
-#include <Chat.h>
+#include "../headers/Chat.h"
 
 class User : public Chat::User {
 

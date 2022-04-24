@@ -2,8 +2,8 @@
 // Created by kamil on 22.04.2022.
 //
 
-#include <User.h>
-#include "../heders/Room.h"
+#include "../headers/User.h"
+#include "../headers/Room.h"
 
 Room::Room(std::string name)
     :m_name(std::move(name))
@@ -40,8 +40,6 @@ void Room::removeUser(const Chat::UserPrx &who, const Ice::Current &current) {
 }
 
 std::string Room::getName(const Ice::Current &) {
-    printf("name sssssss");
-
     return m_name;
 }
 

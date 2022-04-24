@@ -1,5 +1,5 @@
-#include "../heders/Room.h"
-#include "../heders/Server.h"
+#include "../headers/Room.h"
+#include "../headers/Server.h"
 
 Chat::roomList Server::getRooms(const Ice::Current &current) {
     return m_list;
