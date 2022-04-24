@@ -14,9 +14,9 @@ private:
 
 
 public:
-    Chat::Room* addRoom(std::string name) throw (Chat::RoomAlreadyExists);
-    void removeRoom(std::string name) throw (Chat::RoomNotExists);
-    int getCPULoad();
+    virtual Chat::RoomPrx addRoom(const ::std::string& name, const ::Ice::Current& current) override;
+    virtual void removeRoom(const ::std::string& name, const ::Ice::Current& current) override;
+    virtual ::Ice::Int getCPULoad(const ::Ice::Current& current) override;
 };
 
 #endif //CHAT_ROOMFACTORY_H
