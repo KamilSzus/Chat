@@ -1,4 +1,3 @@
-
 module Chat {
 
 interface RoomFactory;

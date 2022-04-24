@@ -4,14 +4,18 @@
 
 #include "User.h"
 
-std::string User::getName() {
-    return std::string();
+User::User(std::string userName)
+    :m_userName(std::move(userName))
+{}
+
+std::string User::getName(const Ice::Current &) {
+    return m_userName;
 }
 
-void User::receivePrivateMessage(std::string message, Chat::User *sender) {
-
+void User::receiveMessage(const std::string &message, const Chat::UserPrx &sender, const Chat::RoomPrx &room, const Ice::Current &) {
+    
 }
 
-void User::receiveMessage(std::string message, Chat::User *sender, Chat::Room *room) {
+void User::receivePrivateMessage(const std::string &message, const Chat::UserPrx &sender, const Ice::Current &) {
 
 }

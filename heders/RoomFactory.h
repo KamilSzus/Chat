@@ -6,8 +6,7 @@
 #define CHAT_ROOMFACTORY_H
 
 #include <Ice/Ice.h>
-#include <chat.h>
-
+#include <Chat.h>
 
 class RoomFactory : Chat::RoomFactory{
 
@@ -19,6 +18,5 @@ public:
     void removeRoom(std::string name) throw (Chat::RoomNotExists);
     int getCPULoad();
 };
-
 
 #endif //CHAT_ROOMFACTORY_H

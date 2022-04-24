@@ -4,19 +4,21 @@
 #define CHAT_ROOM_H
 
 #include <Ice/Ice.h>
-#include <chat.h>
+#include <Chat.h>
 
-class Room : Chat::Room {
+class Room : public Chat::Room {
 
 private:
-
+    std::string m_name;
+    Chat::userList m_userList;
 
 public:
-    Chat::userList presentUsers();
-    void sendMessage(std::string message, Chat::User* sender);
-    void addUser(Chat::User* who);
-    void removeUser(Chat::User* who) throw (Chat::UserNotExists);
-    std::string getName();
+    Room(std::string name);
+    virtual Chat::userList presentUsers(const Ice::Current&) override;
+    virtual void sendMessage(const ::std::string& message, const Chat::UserPrx& sender, const ::Ice::Current& current) override;
+    virtual void addUser(const Chat::UserPrx& who, const ::Ice::Current& current) override;
+    virtual void removeUser(const Chat::UserPrx& who, const ::Ice::Current& current = ::Ice::emptyCurrent) override;
+    virtual std::string getName(const Ice::Current&) override;
 };
 
 

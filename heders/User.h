@@ -1,22 +1,23 @@
-//
-// Created by kamil on 23.04.2022.
-//
 
 #ifndef CHAT_USER_H
 #define CHAT_USER_H
 
 #include <Ice/Ice.h>
-#include <chat.h>
+#include <Chat.h>
 
-class User : Chat::User {
+class User : public Chat::User {
 
 private:
-
+    std::string m_userName;
 
 public:
-    std::string getName();
-    void receiveMessage(std::string message, Chat::User* sender, Chat::Room* room);
-    void receivePrivateMessage(std::string message, Chat::User* sender);
+    User(std::string userName);
+
+    virtual std::string getName(const Ice::Current &) override;
+
+    virtual void receiveMessage(const ::std::string& message, const Chat::UserPrx& sender, const Chat::RoomPrx& room, const ::Ice::Current&) override;
+
+    virtual void receivePrivateMessage(const ::std::string& message, const Chat::UserPrx& sender, const ::Ice::Current&) override;
 
 };
 

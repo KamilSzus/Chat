@@ -2,19 +2,21 @@
 #define CHAT_SERVER_H
 
 #include <Ice/Ice.h>
-#include <chat.h>
+#include <Chat.h>
+#include <cstdio>
+#include <vector>
 
 
 class Server : Chat::Server {
-
 private:
+    Chat::roomList m_list;
 
 public:
-    Chat::Room* getRoom(std::string name);
-    Chat::roomList getRooms();
-    Chat::Room* addRoom(std::string name) throw(Chat::RoomAlreadyExists);
-    void removeRoom(std::string name) throw(Chat::RoomNotExists);
-    void addNewFactory(Chat::RoomFactory* factory);
+    virtual Chat::RoomPrx getRoom(const ::std::string& name, const ::Ice::Current& current) override;
+    virtual Chat::roomList getRooms(const ::Ice::Current& current) override;
+    virtual Chat::RoomPrx addRoom(const ::std::string& name, const ::Ice::Current& current) override;
+    virtual void removeRoom(const ::std::string& name, const ::Ice::Current& current) override;
+    virtual void addNewFactory(const Chat::RoomFactoryPrx& factory, const ::Ice::Current& current) override;
 };
 
 

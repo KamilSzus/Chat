@@ -13,7 +13,7 @@
 // </auto-generated>
 //
 
-#include "../heders/Chat.h"
+#include "Chat.h"
 #include <IceUtil/PushDisableWarnings.h>
 #include <Ice/LocalException.h>
 #include <Ice/ValueFactory.h>
