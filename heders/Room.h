@@ -17,8 +17,9 @@ public:
     virtual Chat::userList presentUsers(const Ice::Current&) override;
     virtual void sendMessage(const ::std::string& message, const Chat::UserPrx& sender, const ::Ice::Current& current) override;
     virtual void addUser(const Chat::UserPrx& who, const ::Ice::Current& current) override;
-    virtual void removeUser(const Chat::UserPrx& who, const ::Ice::Current& current = ::Ice::emptyCurrent) override;
+    virtual void removeUser(const Chat::UserPrx& who, const ::Ice::Current& current) override;
     virtual std::string getName(const Ice::Current&) override;
+    bool isUserOnList(const std::string &name, const Ice::Current &current);
 };
 
 
