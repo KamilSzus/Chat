@@ -40,6 +40,8 @@ void Room::removeUser(const Chat::UserPrx &who, const Ice::Current &current) {
 }
 
 std::string Room::getName(const Ice::Current &) {
+    printf("name sssssss");
+
     return m_name;
 }
 
