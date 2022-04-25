@@ -2,15 +2,12 @@
 // Created by kamil on 24.04.2022.
 //
 
-#include <Ice/Ice.h>
 #include <memory>
 #include "../headers/Room.h"
 #include "../headers/Server.h"
+#include "ServerMain.h"
 
-
-
-int main(int argc, char* argv[])
-{
+int ServerMain::run(int argc, char **argv) {
     Ice::PropertiesPtr properties = Ice::Application::communicator()->getProperties();
     int serverPort = properties->getPropertyAsIntWithDefault("server.port.set", 49152);
     Ice::ObjectAdapterPtr adapterPtr = Ice::Application::communicator()->createObjectAdapterWithEndpoints(
@@ -19,10 +16,15 @@ int main(int argc, char* argv[])
     Chat::ServerPtr serverPtr = new Server();
     adapterPtr->add(serverPtr, Ice::stringToIdentity("server"));
     adapterPtr->activate();
-
     std::cout << "Server running..." << std::endl;
     Ice::Application::communicator()->waitForShutdown();
 
     return 0;
+}
 
+
+int main(int argc, char* argv[])
+{
+    ServerMain app;
+    return app.main(argc, argv, "chat.prop");
 }

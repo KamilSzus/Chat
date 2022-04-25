@@ -19,5 +19,5 @@ add_executable(Chat
         sources/User.cpp
         sources/RoomFactory.cpp
         sources/Chat.cpp
-        ChatClient/Client.cpp
-        )
+        ChatClient/ClientMain.cpp
+        ChatServer/ServerMain.h ChatClient/ClientMain.h)

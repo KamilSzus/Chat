@@ -1,6 +1,6 @@
 OBJS	= Client.o Room.o Server.o User.o RoomFactory.o Chat.o
 SOURCE	= Client.cpp ../sources/Room.cpp ../sources/Server.cpp ../sources/User.cpp ../sources/RoomFactory.cpp ../sources/Chat.cpp
-HEADER	= ../headers/Room.h ../headers/Server.h ../headers/User.h ../headers/RoomFactory.h ../headers/Chat.h
+HEADER	= ../headers/Room.h ../headers/Server.h ../headers/User.h ../headers/RoomFactory.h ../headers/Chat.h ClientMain.h
 OUT	= ChatClient.out
 CC	 = g++
 FLAGS	 = -g -c -Wall
