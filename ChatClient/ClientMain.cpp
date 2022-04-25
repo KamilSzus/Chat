@@ -8,15 +8,15 @@ int ClientMain::run(int argc, char **argv) {
     Ice::PropertiesPtr properties = communicator()->getProperties();
     int serverPort = properties->getPropertyAsIntWithDefault("server.port.set", 49152);
     Ice::ObjectPrx proxy = communicator()->stringToProxy("server:default -p " + std::to_string(serverPort));
-    this->serverPrx = serverPrx.uncheckedCast(proxy);
+    m_serverPrx = Chat::ServerPrx::uncheckedCast(proxy);
     int portMin = properties->getPropertyAsIntWithDefault("client.port.range.min", 55555);
     int portMax = properties->getPropertyAsIntWithDefault("client.port.range.max", 65535);
-    this->adapterPtr = getAdapter(portMin, portMax);
-    this->adapterPtr->activate();
+    m_adapterPtr = getAdapter(portMin, portMax);
+    m_adapterPtr->activate();
     createUser();
     listen();
-    if (this->roomPrx != ICE_NULLPTR) {
-        this->roomPrx->removeUser(this->userPrx);
+    if (m_roomPrx != ICE_NULLPTR) {
+        m_roomPrx->removeUser(m_userPrx);
     }
     communicator()->shutdown();
     communicator()->waitForShutdown();
@@ -27,7 +27,7 @@ int ClientMain::run(int argc, char **argv) {
 Ice::ObjectAdapterPtr ClientMain::getAdapter(int portMin, int portMax) {
     while (true)
     {
-        srand(time(NULL));
+        srand(time(nullptr));
         int port = portMin + rand() % (portMax - portMin);
         std::cout << port << std::endl;
         try
@@ -50,7 +50,7 @@ void ClientMain::listen() {
     {
         std::string command;
         getline(std::cin, command);
-        std::vector<std::string> tokenList = tokenize(command);
+        std::vector<std::string> tokenList = buffer(command);
         command = tokenList.at(0);
         if (command == "/help")
         {
@@ -78,7 +78,7 @@ void ClientMain::listen() {
         }
         else if (command == "/msgprv")
         {
-            std::vector<std::string> args = tokenize(tokenList[1]);
+            std::vector<std::string> args = buffer(tokenList[1]);
             sendPrivateMessage(args[0], args[1]);
         }
         else if (command == "/msg")
@@ -110,13 +110,13 @@ void ClientMain::showHelp() {
 }
 
 void ClientMain::leaveRoom() {
-    if (this->roomPrx == ICE_NULLPTR) {
+    if (m_roomPrx == ICE_NULLPTR) {
         std::cerr << "You ain't connected to any chat room" << std::endl;
         return;
     }
-    std::string name = this->roomPrx->getName();
-    this->roomPrx->removeUser(this->userPrx);
-    this->roomPrx = ICE_NULLPTR;
+    std::string name = m_roomPrx->getName();
+    m_roomPrx->removeUser(m_userPrx);
+    m_roomPrx = ICE_NULLPTR;
     std::cout << "You left chat room " << name << std::endl;
 }
 
@@ -126,24 +126,24 @@ void ClientMain::joinRoom(std::string &name) {
         std::cerr << "Chat room name not specified" << std::endl;
         return;
     }
-    if (this->roomPrx != ICE_NULLPTR && this->roomPrx->getName() == name)
+    if (m_roomPrx != ICE_NULLPTR && m_roomPrx->getName() == name)
     {
         std::cerr << "You are already connected to this chat room" << std::endl;
         return;
     }
-    Chat::roomList roomList = serverPrx->getRooms();
+    Chat::roomList roomList = m_serverPrx->getRooms();
     for (auto it = std::begin(roomList); it != std::end(roomList); ++it)
     {
         Chat::RoomPrx room = *it;
         if (room->getName() == name)
         {
-            if (this->roomPrx != ICE_NULLPTR)
+            if (m_roomPrx != ICE_NULLPTR)
             {
-                this->leaveRoom();
+                leaveRoom();
             }
-            std::cout<<userPrx->getName()<<"\n";
-            room->addUser(userPrx);
-            this->roomPrx = room;
+            std::cout << m_userPrx->getName() << "\n";
+            room->addUser(m_userPrx);
+            m_roomPrx = room;
             std::cout << "You joined chat room " << name << std::endl;
             return;
         }
@@ -159,7 +159,7 @@ void ClientMain::createRoom(std::string &name) {
     }
     try
     {
-        this->serverPrx->addRoom(name);
+        m_serverPrx->addRoom(name);
         std::cout << "Chat room " << name << " created, join using /join " << name << " command" << std::endl;
     }
     catch (Chat::RoomAlreadyExists ex)
@@ -169,7 +169,7 @@ void ClientMain::createRoom(std::string &name) {
 }
 
 void ClientMain::sendPrivateMessage(std::string &username, std::string &message) {
-    if (this->roomPrx == ICE_NULLPTR) {
+    if (m_roomPrx == ICE_NULLPTR) {
         std::cerr << "You ain't connected to any chat room" << std::endl;
         return;
     }
@@ -181,15 +181,15 @@ void ClientMain::sendPrivateMessage(std::string &username, std::string &message)
         std::cerr << "Message not specified" << std::endl;
         return;
     }
-    if (username == this->userPrx->getName()) {
+    if (username == m_userPrx->getName()) {
         std::cerr << "Cannot send message to yourself, you fool!" << std::endl;
         return;
     }
-    Chat::userList userList = this->roomPrx->presentUsers();
+    Chat::userList userList = m_roomPrx->presentUsers();
     for (auto it = std::begin(userList); it != std::end(userList); ++it) {
         Chat::UserPrx user = *it;
         if (user->getName() == username) {
-            user->receivePrivateMessage(message, this->userPrx);
+            user->receivePrivateMessage(message, m_userPrx);
             return;
         }
     }
@@ -197,7 +197,7 @@ void ClientMain::sendPrivateMessage(std::string &username, std::string &message)
 }
 
 void ClientMain::sendMessage(std::string &message) {
-    if (this->roomPrx == ICE_NULLPTR) {
+    if (m_roomPrx == ICE_NULLPTR) {
         std::cerr << "You ain't connected to any chat room" << std::endl;
         return;
     }
@@ -205,15 +205,15 @@ void ClientMain::sendMessage(std::string &message) {
         std::cerr << "Message not specified" << std::endl;
         return;
     }
-    Chat::userList userList = this->roomPrx->presentUsers();
+    Chat::userList userList = m_roomPrx->presentUsers();
     for (auto it = std::begin(userList); it != std::end(userList); ++it) {
         Chat::UserPrx user = *it;
-        user->receiveMessage(message, userPrx, roomPrx);
+        user->receiveMessage(message, m_userPrx, m_roomPrx);
     }
 }
 
 void ClientMain::showRoomList() {
-    Chat::roomList roomList = serverPrx->getRooms();
+    Chat::roomList roomList = m_serverPrx->getRooms();
     if (roomList.empty())
     {
         std::cout << "No chat rooms available" << std::endl;
@@ -228,12 +228,12 @@ void ClientMain::showRoomList() {
 }
 
 void ClientMain::showUserList() {
-    if (this->roomPrx == ICE_NULLPTR)
+    if (m_roomPrx == ICE_NULLPTR)
     {
         std::cerr << "You ain't connected to any chat room" << std::endl;
         return;
     }
-    Chat::userList userList = this->roomPrx->presentUsers();
+    Chat::userList userList = m_roomPrx->presentUsers();
     if (userList.size() == 1)
     {
         std::cout << "You're the lonely guy" << std::endl;
@@ -242,14 +242,13 @@ void ClientMain::showUserList() {
     std::cout << "Users online:" << std::endl;
     for (auto it = std::begin(userList); it != std::end(userList); ++it)
     {
-
         Chat::UserPrx user = *it;
         std::cout << user<<"\n";
         std::cout << user->getName() << std::endl;
     }
 }
 
-std::vector<std::string> ClientMain::tokenize(std::string &command) {
+std::vector<std::string> ClientMain::buffer(std::string &command) {
     command = std::regex_replace(command, std::regex("^ +| +$|( ) +"), "$1");
     std::vector<std::string> tokenList(2);
     int pos = command.find(" ");
@@ -268,9 +267,9 @@ Chat::UserPrx ClientMain::createUser() {
         std::cout << "Username: ";
         std::getline(std::cin, username);
         Chat::UserPtr userPtr = new User(username);
-        userPrx = userPrx.uncheckedCast(adapterPtr->addWithUUID(userPtr));
+        m_userPrx = Chat::UserPrx::uncheckedCast(m_adapterPtr->addWithUUID(userPtr));
 
-        return userPrx;
+        return m_userPrx;
     }
 
 }

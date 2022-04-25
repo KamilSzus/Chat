@@ -9,16 +9,16 @@ public:
     int run(int argc, char **argv) override;
 
 private:
-    Ice::ObjectAdapterPtr adapterPtr;
-    Chat::UserPrx userPrx;
-    Chat::ServerPrx serverPrx;
-    Chat::RoomPrx roomPrx;
+    Ice::ObjectAdapterPtr m_adapterPtr;
+    Chat::UserPrx m_userPrx;
+    Chat::ServerPrx m_serverPrx;
+    Chat::RoomPrx m_roomPrx;
 
-    Ice::ObjectAdapterPtr getAdapter(int portMin, int portMax);
+    static Ice::ObjectAdapterPtr getAdapter(int portMin, int portMax);
 
     void listen();
 
-    void showHelp();
+    static void showHelp();
 
     void leaveRoom();
 
@@ -36,7 +36,7 @@ private:
 
     Chat::UserPrx createUser();
 
-    std::vector<std::string> tokenize(std::string &command);
+    static std::vector<std::string> buffer(std::string &command);
 
 };
 

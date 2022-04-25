@@ -13,7 +13,7 @@ std::string User::getName(const Ice::Current &) {
 }
 
 void User::receiveMessage(const std::string &message, const Chat::UserPrx &sender, const Chat::RoomPrx &room, const Ice::Current &) {
-    std::cout << room->getName()<< sender->getName() << message << std::endl;
+    std::cout << "Room: " <<room->getName() << "From " << sender->getName()<< " " << message << std::endl;
 }
 
 void User::receivePrivateMessage(const std::string &message, const Chat::UserPrx &sender, const Ice::Current &) {
