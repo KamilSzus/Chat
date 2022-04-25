@@ -14,7 +14,11 @@ int main(int argc, char* argv[])
         if (!room) {
             throw "Invalid proxy";
         }
+        User* we = new User("We");
+        Chat::UserPrx userPrx = (reinterpret_cast<IceProxy::Chat::User*>(we));
+        room->addUser(userPrx);
         std::string test = room->getName();
+        room->sendMessage("nowa",userPrx);
     } catch (const Ice::Exception& ex) {
         std::cerr << ex << std::endl;
         status = 1;

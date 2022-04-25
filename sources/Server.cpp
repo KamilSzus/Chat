@@ -8,7 +8,7 @@ Chat::roomList Server::getRooms(const Ice::Current &current) {
 Chat::RoomPrx Server::getRoom(const std::string &name, const Ice::Current &current) {
     Chat::RoomPrx expectedValue = nullptr;
     for(auto & i : m_list){
-        if(i._ptr->getName()==name){
+        if(i->getName()==name){
             expectedValue = i;
             break;
         }
@@ -20,8 +20,9 @@ Chat::RoomPrx Server::getRoom(const std::string &name, const Ice::Current &curre
 Chat::RoomPrx Server::addRoom(const std::string &name, const Ice::Current &current) {
     auto newRoom = getRoom(name,current);
     if(!newRoom){
-        Room* room = new Room(name);
-        m_list.push_back(reinterpret_cast<IceProxy::Chat::Room *>(room));
+        Chat::RoomPtr roomPtr = new Room(name);
+        Chat::RoomPrx roomPrx = Chat::RoomPrx::uncheckedCast(current.adapter->addWithUUID(roomPtr));
+        m_list.push_back(roomPrx);
     }else{
         throw Chat::RoomAlreadyExists();
     }
@@ -33,7 +34,7 @@ void Server::removeRoom(const std::string &name, const Ice::Current &current) {
     auto newRoom = getRoom(name,current);
     if(!newRoom){
         for(auto & i : m_list) {
-            if (i._ptr->getName() == name) {
+            if (i->getName() == name) {
                 m_list.erase(m_list.begin() + i);
                 break;
             }
@@ -45,5 +46,5 @@ void Server::removeRoom(const std::string &name, const Ice::Current &current) {
 }
 
 void Server::addNewFactory(const Chat::RoomFactoryPrx &factory, const Ice::Current &current) {
-
+    m_roomFactoryList.push_back(factory);
 }

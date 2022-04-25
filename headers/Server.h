@@ -10,6 +10,7 @@
 class Server : Chat::Server {
 private:
     Chat::roomList m_list;
+    std::vector<Chat::RoomFactoryPrx> m_roomFactoryList;
 
 public:
     virtual Chat::RoomPrx getRoom(const ::std::string& name, const ::Ice::Current& current) override;

@@ -14,22 +14,25 @@ Chat::userList Room::presentUsers(const Ice::Current &) {
 }
 
 void Room::sendMessage(const std::string &message, const Chat::UserPrx &sender, const Ice::Current &current) {
-    for (auto &i : m_userList) {
-        i._ptr->receiveMessage(message, sender, reinterpret_cast<IceProxy::Chat::Room *>(this),
-                               (const Ice::Context &) current);
+    for (const auto& chatUserPrx : m_userList)
+    {
+        Chat::RoomPtr roomPtr = this;
+        Chat::RoomPrx roomPrx = Chat::RoomPrx::uncheckedCast(current.adapter->addWithUUID(roomPtr));
+        chatUserPrx->receiveMessage( message,sender,roomPrx);
     }
 }
 
 void Room::addUser(const Chat::UserPrx &who, const Ice::Current &current) {
-    if(!isUserOnList(who->getName(),current)) {
+    if(!isUserOnList(who->getName(),current)){
         m_userList.push_back(who);
     }
+
 }
 
 void Room::removeUser(const Chat::UserPrx &who, const Ice::Current &current) {
     if(isUserOnList(who->getName(),current)) {
         for (auto &i : m_userList) {
-            if (i._ptr->getName() == who->getName()) {
+            if (i->getName() == who->getName()) {
                 m_userList.erase(m_userList.begin() + i);
                 break;
             }
@@ -45,7 +48,7 @@ std::string Room::getName(const Ice::Current &) {
 
 bool Room::isUserOnList(const std::string &name, const Ice::Current &current) {
     for(auto & i : m_userList){
-        if(i._ptr->getName()==name){
+        if(i->getName()==name){
             return true;
         }
     }

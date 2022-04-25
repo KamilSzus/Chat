@@ -21,7 +21,6 @@ public:
     virtual std::string getName(const Ice::Current&) override;
     bool isUserOnList(const std::string &name, const Ice::Current &current);
 
-    Room();
 };
 
 
