@@ -1,0 +1,15 @@
+/ChatServer/Server.o
+/ChatClient/User.o
+/ChatClient/Chat.o
+/ChatServer/ChatServer.out
+/ChatClient/Server.o
+/ChatClient/Room.o
+/ChatServer/ServerMain.o
+/ChatClient/RoomFactory.o
+/ChatServer/User.o
+/ChatServer/Room.o
+/ChatClient/Client.o
+/cmake-build-debug/
+/ChatServer/RoomFactory.o
+/ChatClient/ChatClient.out
+/ChatServer/Chat.o

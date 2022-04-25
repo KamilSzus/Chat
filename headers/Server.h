@@ -7,7 +7,7 @@
 #include <vector>
 
 
-class Server : Chat::Server {
+class Server : public Chat::Server {
 private:
     Chat::roomList m_list;
     std::vector<Chat::RoomFactoryPrx> m_roomFactoryList;

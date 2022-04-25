@@ -8,7 +8,7 @@
 #include <Ice/Ice.h>
 #include "../headers/Chat.h"
 
-class RoomFactory : Chat::RoomFactory{
+class RoomFactory : public Chat::RoomFactory{
 
 private:
     int m_numberOfChats;
