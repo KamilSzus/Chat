@@ -14,11 +14,12 @@ Chat::userList Room::presentUsers(const Ice::Current &) {
 }
 
 void Room::sendMessage(const std::string &message, const Chat::UserPrx &sender, const Ice::Current &current) {
-    for (const auto& chatUserPrx : m_userList)
+    std::cout<<"sm1"<<std::endl;
+    for (auto& chatUserPrx : m_userList)
     {
         Chat::RoomPtr roomPtr = this;
-        Chat::RoomPrx roomPrx = Chat::RoomPrx::uncheckedCast(current.adapter->addWithUUID(roomPtr));
-        chatUserPrx->receiveMessage( message,sender,roomPrx);
+        Chat::RoomPrx roomPrx = Chat::RoomPrx::checkedCast(current.adapter->addWithUUID(roomPtr));
+        chatUserPrx->receiveMessage(message,sender,roomPrx);
     }
 }
 

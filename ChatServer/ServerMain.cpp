@@ -19,7 +19,7 @@ int ServerMain::run(int argc, char **argv) {
     std::cout << "Server running..." << std::endl;
     Ice::Application::communicator()->waitForShutdown();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 

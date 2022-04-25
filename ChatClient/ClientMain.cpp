@@ -27,7 +27,9 @@ int ClientMain::run(int argc, char **argv) {
 Ice::ObjectAdapterPtr ClientMain::getAdapter(int portMin, int portMax) {
     while (true)
     {
-        int port = 54321;
+        srand(time(NULL));
+        int port = portMin + rand() % (portMax - portMin);
+        std::cout << port << std::endl;
         try
         {
             Ice::ObjectAdapterPtr ptr = communicator()->createObjectAdapterWithEndpoints(
@@ -119,10 +121,8 @@ void ClientMain::leaveRoom() {
 }
 
 void ClientMain::joinRoom(std::string &name) {
-    std::cout<<"666";
     if (name.empty())
     {
-        std::cout<<"cc";
         std::cerr << "Chat room name not specified" << std::endl;
         return;
     }
@@ -131,26 +131,19 @@ void ClientMain::joinRoom(std::string &name) {
         std::cerr << "You are already connected to this chat room" << std::endl;
         return;
     }
-    std::cout<<"aa";
     Chat::roomList roomList = serverPrx->getRooms();
-    std::cout<<"bb";
     for (auto it = std::begin(roomList); it != std::end(roomList); ++it)
     {
-        std::cout<<"1";
         Chat::RoomPrx room = *it;
         if (room->getName() == name)
         {
-            std::cout<<"2";
             if (this->roomPrx != ICE_NULLPTR)
             {
-                std::cout<<"3";
                 this->leaveRoom();
             }
-            std::cout<<"4";
-            room->addUser(this->userPrx);
-            std::cout<<"5";
+            std::cout<<userPrx->getName()<<"\n";
+            room->addUser(userPrx);
             this->roomPrx = room;
-            std::cout<<"6";
             std::cout << "You joined chat room " << name << std::endl;
             return;
         }
@@ -176,34 +169,27 @@ void ClientMain::createRoom(std::string &name) {
 }
 
 void ClientMain::sendPrivateMessage(std::string &username, std::string &message) {
-    if (this->roomPrx == ICE_NULLPTR)
-    {
+    if (this->roomPrx == ICE_NULLPTR) {
         std::cerr << "You ain't connected to any chat room" << std::endl;
         return;
     }
-    if (username.empty())
-    {
+    if (username.empty()) {
         std::cerr << "Username not specified" << std::endl;
         return;
     }
-    if (message.empty())
-    {
+    if (message.empty()) {
         std::cerr << "Message not specified" << std::endl;
         return;
     }
-    if (username == this->userPrx->getName())
-    {
+    if (username == this->userPrx->getName()) {
         std::cerr << "Cannot send message to yourself, you fool!" << std::endl;
         return;
     }
     Chat::userList userList = this->roomPrx->presentUsers();
-    for (auto it = std::begin(userList); it != std::end(userList); ++it)
-    {
+    for (auto it = std::begin(userList); it != std::end(userList); ++it) {
         Chat::UserPrx user = *it;
-        if (user->getName() == username)
-        {
-            user->receivePrivateMessage(message,this->userPrx);
-            std::cout << "<" << this->userPrx->getName() << "><EVERYBODY> " << message << std::endl;
+        if (user->getName() == username) {
+            user->receivePrivateMessage(message, this->userPrx);
             return;
         }
     }
@@ -211,17 +197,19 @@ void ClientMain::sendPrivateMessage(std::string &username, std::string &message)
 }
 
 void ClientMain::sendMessage(std::string &message) {
-    if (this->roomPrx == ICE_NULLPTR)
-    {
+    if (this->roomPrx == ICE_NULLPTR) {
         std::cerr << "You ain't connected to any chat room" << std::endl;
         return;
     }
-    if (message.empty())
-    {
+    if (message.empty()) {
         std::cerr << "Message not specified" << std::endl;
         return;
     }
-    roomPrx->sendMessage(message, this->userPrx);
+    Chat::userList userList = this->roomPrx->presentUsers();
+    for (auto it = std::begin(userList); it != std::end(userList); ++it) {
+        Chat::UserPrx user = *it;
+        user->receiveMessage(message, userPrx, roomPrx);
+    }
 }
 
 void ClientMain::showRoomList() {
@@ -280,7 +268,6 @@ Chat::UserPrx ClientMain::createUser() {
         std::cout << "Username: ";
         std::getline(std::cin, username);
         Chat::UserPtr userPtr = new User(username);
-        std::cout << userPtr->getName() << "\n";
         userPrx = userPrx.uncheckedCast(adapterPtr->addWithUUID(userPtr));
 
         return userPrx;
