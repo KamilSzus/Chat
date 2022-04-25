@@ -1,5 +1,5 @@
-OBJS	= Client.o Room.o Server.o User.o RoomFactory.o Chat.o
-SOURCE	= Client.cpp ../sources/Room.cpp ../sources/Server.cpp ../sources/User.cpp ../sources/RoomFactory.cpp ../sources/Chat.cpp
+OBJS	= ClientMain.o Room.o Server.o User.o RoomFactory.o Chat.o
+SOURCE	= ClientMain.cpp ../sources/Room.cpp ../sources/Server.cpp ../sources/User.cpp ../sources/RoomFactory.cpp ../sources/Chat.cpp
 HEADER	= ../headers/Room.h ../headers/Server.h ../headers/User.h ../headers/RoomFactory.h ../headers/Chat.h ClientMain.h
 OUT	= ChatClient.out
 CC	 = g++
@@ -9,8 +9,8 @@ LFLAGS	 = -pthread -lIce
 all: $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
-Client.o: Client.cpp
-	$(CC) $(FLAGS) Client.cpp -std=c++11
+ClientMain.o: ClientMain.cpp
+	$(CC) $(FLAGS) ClientMain.cpp -std=c++11
 
 Room.o: ../sources/Room.cpp
 	$(CC) $(FLAGS) ../sources/Room.cpp -std=c++11

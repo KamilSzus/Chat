@@ -261,5 +261,5 @@ std::vector<std::string> ClientMain::tokenize(std::string &command) {
 
 int main(int argc, char* argv[]) {
     ClientMain app;
-    return app.main(argc, argv, "chat.prop");
+    return app.main(argc, argv, "../chat.prop");
 }

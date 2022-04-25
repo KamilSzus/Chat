@@ -3,7 +3,7 @@
 //
 
 #include <Ice/Config.h>
-#include <Room.h>
+#include "../headers/Room.h"
 #include "../headers/RoomFactory.h"
 
 RoomFactory::RoomFactory()
@@ -50,4 +50,4 @@ bool RoomFactory::isRoomOnList(const std::string &name) {
     }
     return false;
 }
-}
+

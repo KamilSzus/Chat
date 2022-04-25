@@ -26,5 +26,5 @@ int ServerMain::run(int argc, char **argv) {
 int main(int argc, char* argv[])
 {
     ServerMain app;
-    return app.main(argc, argv, "chat.prop");
+    return app.main(argc, argv, "../chat.prop");
 }
