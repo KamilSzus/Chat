@@ -5,9 +5,8 @@
 #include "../headers/User.h"
 
 User::User(std::string userName)
-    :m_userName(std::move(userName))
+    :m_userName(userName)
 {}
-
 std::string User::getName(const Ice::Current &) {
     return m_userName;
 }

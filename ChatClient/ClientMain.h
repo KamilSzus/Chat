@@ -12,7 +12,7 @@ private:
     Ice::ObjectAdapterPtr adapterPtr;
     Chat::UserPrx userPrx;
     Chat::ServerPrx serverPrx;
-    Chat::RoomPrx chatRoomPrx;
+    Chat::RoomPrx roomPrx;
 
     Ice::ObjectAdapterPtr getAdapter(int portMin, int portMax);
 
@@ -33,6 +33,8 @@ private:
     void showRoomList();
 
     void showUserList();
+
+    Chat::UserPrx createUser();
 
     std::vector<std::string> tokenize(std::string &command);
 

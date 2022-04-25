@@ -23,10 +23,9 @@ void Room::sendMessage(const std::string &message, const Chat::UserPrx &sender, 
 }
 
 void Room::addUser(const Chat::UserPrx &who, const Ice::Current &current) {
-    if(!isUserOnList(who->getName(),current)){
-        m_userList.push_back(who);
-    }
-
+    std::cout << "User " << who->getName() << " registered" << std::endl;
+    m_userList.push_back(who);
+    std::cout << "User " << who->getName() << " registered" << std::endl;
 }
 
 void Room::removeUser(const Chat::UserPrx &who, const Ice::Current &current) {
