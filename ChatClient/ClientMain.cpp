@@ -1,7 +1,6 @@
 
 #include <regex>
 #include "../headers/User.h"
-#include "../headers/Room.h"
 #include "ClientMain.h"
 
 int ClientMain::run(int argc, char **argv) {
@@ -85,6 +84,10 @@ void ClientMain::listen() {
         {
             sendMessage(tokenList[1]);
         }
+        else if (command == "/delete")
+        {
+            deleteRoom(tokenList[1]);
+        }
         else if (command == "/quit")
         {
             break;
@@ -99,9 +102,10 @@ void ClientMain::listen() {
 void ClientMain::showHelp() {
     std::cout << "List of available commands:" << std::endl;
     std::cout << "/join <RoomName> - joins chat room" << std::endl;
-    std::cout << "/leave - leaves current chat room" << std::endl;
-    std::cout << "/rooms - lists available chat rooms" << std::endl;
     std::cout << "/create <RoomName> - creates chat room" << std::endl;
+    std::cout << "/delete <RoomName> - delete chat room" << std::endl;
+    std::cout << "/rooms - lists available chat rooms" << std::endl;
+    std::cout << "/leave - leaves current chat room" << std::endl;
     std::cout << "/users - lists all users in chat room" << std::endl;
     std::cout << "/msg <message> - sends message to everyone in chat room" << std::endl;
     std::cout << "/msgprv <user> <message> - sends private message to specific user in chat room" << std::endl;
@@ -182,7 +186,7 @@ void ClientMain::sendPrivateMessage(std::string &username, std::string &message)
         return;
     }
     if (username == m_userPrx->getName()) {
-        std::cerr << "Cannot send message to yourself, you fool!" << std::endl;
+        std::cerr << "Cannot send message to yourself" << std::endl;
         return;
     }
     Chat::userList userList = m_roomPrx->presentUsers();
@@ -236,7 +240,7 @@ void ClientMain::showUserList() {
     Chat::userList userList = m_roomPrx->presentUsers();
     if (userList.size() == 1)
     {
-        std::cout << "You're the lonely guy" << std::endl;
+        std::cout << "You're lonely" << std::endl;
         return;
     }
     std::cout << "Users online:" << std::endl;
@@ -272,6 +276,23 @@ Chat::UserPrx ClientMain::createUser() {
         return m_userPrx;
     }
 
+}
+
+void ClientMain::deleteRoom(std::string &name) {
+    if (name.empty())
+    {
+        std::cerr << "Chat room name not specified" << std::endl;
+        return;
+    }
+    try
+    {
+        m_serverPrx->removeRoom(name);
+        std::cout << "Chat room " << name << " deleted " << std::endl;
+    }
+    catch (Chat::RoomNotExists ex)
+    {
+        std::cerr << "Chat room with this name doesn't exist, please choose another one" << std::endl;
+    }
 }
 
 int main(int argc, char* argv[]) {

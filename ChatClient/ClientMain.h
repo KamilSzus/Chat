@@ -26,6 +26,8 @@ private:
 
     void createRoom(std::string &name);
 
+    void deleteRoom(std::string &name);
+
     void sendPrivateMessage(std::string &username, std::string &message);
 
     void sendMessage(std::string &message);

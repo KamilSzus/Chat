@@ -14,7 +14,6 @@ Chat::userList Room::presentUsers(const Ice::Current &) {
 }
 
 void Room::sendMessage(const std::string &message, const Chat::UserPrx &sender, const Ice::Current &current) {
-    std::cout<<"sm1"<<std::endl;
     for (auto& chatUserPrx : m_userList)
     {
         Chat::RoomPtr roomPtr = this;
@@ -24,7 +23,6 @@ void Room::sendMessage(const std::string &message, const Chat::UserPrx &sender, 
 }
 
 void Room::addUser(const Chat::UserPrx &who, const Ice::Current &current) {
-    std::cout << "User " << who->getName() << " registered" << std::endl;
     m_userList.push_back(who);
     std::cout << "User " << who->getName() << " registered" << std::endl;
 }

@@ -6,20 +6,18 @@ Chat::roomList Server::getRooms(const Ice::Current &current) {
 }
 
 Chat::RoomPrx Server::getRoom(const std::string &name, const Ice::Current &current) {
-    Chat::RoomPrx expectedValue = nullptr;
-    for(auto & i : m_list){
-        if(i->getName()==name){
-            expectedValue = i;
-            break;
+    for (auto it = std::begin(m_list); it != std::end(m_list); ++it) {
+        Chat::RoomPrx roomPrx = *it;
+        if (roomPrx->getName() == name) {
+            return roomPrx;
         }
     }
-
-    return expectedValue;
+    return ICE_NULLPTR;
 }
 
 Chat::RoomPrx Server::addRoom(const std::string &name, const Ice::Current &current) {
     auto newRoom = getRoom(name,current);
-    if(!newRoom){
+    if(newRoom==ICE_NULLPTR){
         Chat::RoomPtr roomPtr = new Room(name);
         Chat::RoomPrx roomPrx = Chat::RoomPrx::uncheckedCast(current.adapter->addWithUUID(roomPtr));
         m_list.push_back(roomPrx);
@@ -32,7 +30,7 @@ Chat::RoomPrx Server::addRoom(const std::string &name, const Ice::Current &curre
 
 void Server::removeRoom(const std::string &name, const Ice::Current &current) {
     auto newRoom = getRoom(name,current);
-    if(!newRoom){
+    if(newRoom!=ICE_NULLPTR){
         for(auto & i : m_list) {
             if (i->getName() == name) {
                 m_list.erase(m_list.begin() + i);
