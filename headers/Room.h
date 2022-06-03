@@ -1,5 +1,3 @@
-
-
 #ifndef CHAT_ROOM_H
 #define CHAT_ROOM_H
 
@@ -9,8 +7,8 @@
 class Room : public Chat::Room {
 
 private:
-    std::string m_name;
-    Chat::userList m_userList;
+    std::string roomName;
+    Chat::userList userList;
 
 public:
     Room(std::string name);

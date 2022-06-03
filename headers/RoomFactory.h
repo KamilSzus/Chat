@@ -1,7 +1,3 @@
-//
-// Created by kamil on 23.04.2022.
-//
-
 #ifndef CHAT_ROOMFACTORY_H
 #define CHAT_ROOMFACTORY_H
 
@@ -12,7 +8,7 @@ class RoomFactory : public Chat::RoomFactory{
 
 private:
     int m_numberOfChats;
-    Chat::roomList m_list;
+    Chat::roomList roomList;
 public:
     RoomFactory();
     virtual Chat::RoomPrx addRoom(const ::std::string& name, const ::Ice::Current& current) override;

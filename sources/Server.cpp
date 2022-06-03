@@ -2,45 +2,40 @@
 #include "../headers/Server.h"
 
 Chat::roomList Server::getRooms(const Ice::Current &current) {
-    return m_list;
+    return roomList;
 }
 
 Chat::RoomPrx Server::getRoom(const std::string &name, const Ice::Current &current) {
-    for (auto it = std::begin(m_list); it != std::end(m_list); ++it) {
-        Chat::RoomPrx roomPrx = *it;
-        if (roomPrx->getName() == name) {
-            return roomPrx;
-        }
-    }
-    return ICE_NULLPTR;
+    auto it = std::find_if(roomList.begin(), roomList.end(), [&](Chat::RoomPrx &roomPrx) {
+        return roomPrx->getName() == name;
+    });
+
+    if (it == roomList.end())
+        return ICE_NULLPTR;
+
+    return roomList.at(std::distance(roomList.begin(), it));
 }
 
 Chat::RoomPrx Server::addRoom(const std::string &name, const Ice::Current &current) {
     auto newRoom = getRoom(name,current);
-    if(newRoom==ICE_NULLPTR){
-        Chat::RoomPtr roomPtr = new Room(name);
-        Chat::RoomPrx roomPrx = Chat::RoomPrx::uncheckedCast(current.adapter->addWithUUID(roomPtr));
-        m_list.push_back(roomPrx);
-    }else{
+    if (newRoom != ICE_NULLPTR)
         throw Chat::RoomAlreadyExists();
-    }
 
-    return m_list.back();
+    Chat::RoomPrx roomPrx = Chat::RoomPrx::uncheckedCast(current.adapter->addWithUUID(new Room(name)));
+    roomList.push_back(roomPrx);
+
+    return roomPrx;
 }
 
 void Server::removeRoom(const std::string &name, const Ice::Current &current) {
-    auto newRoom = getRoom(name,current);
-    if(newRoom!=ICE_NULLPTR){
-        for(auto & i : m_list) {
-            if (i->getName() == name) {
-                m_list.erase(m_list.begin() + i);
-                break;
-            }
-        }
-    }else{
-        throw Chat::RoomNotExists();
-    }
+    auto it = std::find_if(roomList.begin(), roomList.end(), [&](Chat::RoomPrx &roomPrx) {
+        return roomPrx->getName() == name;
+    });
 
+    if (it == roomList.end())
+        throw Chat::RoomNotExists();
+
+    roomList.erase(it);
 }
 
 void Server::addNewFactory(const Chat::RoomFactoryPrx &factory, const Ice::Current &current) {

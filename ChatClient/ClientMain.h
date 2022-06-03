@@ -10,15 +10,13 @@ public:
 
 private:
     Ice::ObjectAdapterPtr m_adapterPtr;
-    Chat::UserPrx m_userPrx;
-    Chat::ServerPrx m_serverPrx;
-    Chat::RoomPrx m_roomPrx;
+    Chat::UserPrx myUserProxy;
+    Chat::ServerPrx connectedServerProxy;
+    Chat::RoomPrx joinedRoomProxy;
 
     static Ice::ObjectAdapterPtr getAdapter(int portMin, int portMax);
 
-    void listen();
-
-    static void showHelp();
+    void commandLoop();
 
     void leaveRoom();
 

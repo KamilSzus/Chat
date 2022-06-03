@@ -8,7 +8,7 @@
 class User : public Chat::User {
 
 private:
-    std::string m_userName;
+    std::string userName;
 
 public:
     User(std::string userName);

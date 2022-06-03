@@ -9,7 +9,7 @@
 
 class Server : public Chat::Server {
 private:
-    Chat::roomList m_list;
+    Chat::roomList roomList;
     std::vector<Chat::RoomFactoryPrx> m_roomFactoryList;
 
 public:
